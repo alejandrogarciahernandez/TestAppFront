@@ -8,13 +8,16 @@ import CustomCardGroup from './components/catalog-card-group/catalog-card-group'
 import filterArrayBasedOnString from './utils/filteringHelper';
 import mockDataCards from './utils/mockData';
 import EditModal from './components/edit-item-modal/edit-modal';
+import AddModal from './components/add-item-modal/add-modal';
+import AddButton from './components/add-button/add-button';
 
 function App() {
 
 
   const [searchBar, setSearchBar] = useState("");
   const [filteredData, setFilteredData] = useState(mockDataCards);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState(false);
   const [selectedEditCard, setSelectedEditCard] = useState();
   const [originalData, setOriginalData] = useState();
 
@@ -39,7 +42,7 @@ function App() {
   const onEditCard = (cardToEdit) => {  
     console.log(cardToEdit);
     setSelectedEditCard(cardToEdit);
-    setModalVisible(true);
+    setEditModalVisible(true);
   };
 
   const handleChangeSearchBar = (event) => {
@@ -49,7 +52,15 @@ function App() {
   }
 
   const onClose = () => {
-    setModalVisible(false);
+    setEditModalVisible(false);
+  }
+
+  const onCloseAdd = () => {
+    setAddModalVisible(false);
+  }
+
+  const showAddModal = () => {
+    setAddModalVisible(true);
   }
 
   const reloadItems = () => {
@@ -64,7 +75,8 @@ function App() {
 
   return (
     <Container>
-      <EditModal show={modalVisible} onClose={onClose} selectedEditCard={selectedEditCard} reloadItems={reloadItems}/>
+      <AddModal show={addModalVisible} onClose={onCloseAdd} selectedEditCard={selectedEditCard} reloadItems={reloadItems}/>
+      <EditModal show={editModalVisible} onClose={onClose} selectedEditCard={selectedEditCard} reloadItems={reloadItems}/>
       <Row style={header}>
         <Col></Col>
       </Row>
@@ -79,7 +91,9 @@ function App() {
         <Col></Col>
       </Row>
       <CustomCardGroup onEdit={onEditCard} data={filteredData} />
+      <AddButton showAddModal={showAddModal} />
     </Container>
+    
   );
 }
 

@@ -1,0 +1,21 @@
+.add-button {
+    box-shadow: 3px 6px 10px rgba(0, 0, 0, 0.3) !important;
+  }
+
+.add-button:hover {
+    animation: pulse 1s forwards;
+    
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1.2);
+    }
+  }
+
