@@ -27,6 +27,8 @@ function AddModal({ show, onClose, reloadItems }) {
     const [errors, setErrors] = useState({})
 
 
+    const [selectedFile, setSelectedFile] = useState(null);
+
     const validate = () => {
         const { price } = card;
         const errors = {};
@@ -35,26 +37,44 @@ function AddModal({ show, onClose, reloadItems }) {
         return errors;
     }
 
-    const addtem = () => {
+    const addtem = ( formData ) => {
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(card)
+            body: formData
         };
         return fetch(process.env.REACT_APP_BACKEND_HOST + `/item`, requestOptions)
             .then(response => response.json());
       }
 
+    const buildFormData = () => {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        formData.append("data", JSON.stringify(card));
+        return formData;
+    }
+
+    const handleFileInputChange = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+      
+        reader.onload = function (event) {
+          const contents = event.target.result;
+        };
+      
+        reader.readAsText(file);
+        setSelectedFile(file);
+      };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         // get our new errors
         const newErrors = validate();
-        console.log(newErrors);
         if (Object.keys(newErrors).length > 0) {
             // We got errors!
             setErrors(newErrors)
         } else {
-            addtem()
+            const body = buildFormData();
+            addtem(body)
                 .then(item => {
                     console.log("Item updated. ");
                     onClose();
@@ -64,6 +84,7 @@ function AddModal({ show, onClose, reloadItems }) {
                     console.error(error);
                 })
         }
+
         console.log(card)
     };
 
@@ -125,7 +146,7 @@ function AddModal({ show, onClose, reloadItems }) {
                         <Row>
                             <Col>
                                 <Form.Label>Imagen</Form.Label>
-                                <Form.Control type="file" />   
+                                <Form.Control type="file" onChange={handleFileInputChange}/>   
                             </Col>
                         </Row>                        
                     </Container>
